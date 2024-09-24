@@ -11,20 +11,20 @@ const taskSchema = Joi.object({
 
 // Create a new task
 exports.createTask = async (req, res) => {
-    // Validate input using Joi
-    const { error } = taskSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
+
 
     try {
         // Create a new task associated with the authenticated user
+        
         const task = new Task({ ...req.body, user: req.user.id });
+
         await task.save();
         res.status(201).json(task);
     } catch (err) {
         // Internal server error handling
+        console.log(err)
         res.status(500).json({ error: 'Server error, failed to create task' });
+        
     }
 };
 
@@ -42,11 +42,6 @@ exports.getTasks = async (req, res) => {
 
 // Update a task by ID
 exports.updateTask = async (req, res) => {
-    // Validate input using Joi
-    const { error } = taskSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
 
     try {
         // Find and update the task associated with the authenticated user
